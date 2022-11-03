@@ -1,4 +1,4 @@
 # the-white-tree
 
-cd str-api && yarn develop
-cd next && yarn dev
+cd str-api && nvm use --lts && yarn develop \n
+cd next && nvm use --lts && yarn dev
