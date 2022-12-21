@@ -1,42 +1,49 @@
+// import Head from "next/head";
 import Link from "next/link";
-import Layout from "../components/Layout";
 import styles from "../styles/Home.module.css";
-import { useFetchUser } from "../utils/authContext";
-////
-export async function getStaticProps() {
-  const res = await fetch(`${process.env.BASE_URL}/products`);
-  const resProducts = await res.json();
-  const items = resProducts.data;
-  console.log(items);
-  return { props: { items } };
-}
+import { twoDecimals } from "../utils/format";
+import { API_URL, fromImageToUrl } from "../utils/urls";
 //
-export default function Products({ items }) {
-  const { user, loading } = useFetchUser();
-  return (
-    <Layout user={user}>
-      <div className={styles.container}>
-        <main className={styles.main}>
-          <p className={styles.description}>
-            Get started by editing{" "}
-            <code className={styles.code}>pages/index.js</code>
-          </p>
 
-          <div className={styles.grid}>
-            <span>
-              {items &&
-                items.map((i) => (
-                  <Link href={`/product/${i.id}`} key={i.id}>
-                    <a className={styles.card}>
-                      <h2>{i.attributes.name} &rArr;</h2>
-                      {i.attributes.description}
-                    </a>
-                  </Link>
-                ))}
-            </span>
+export async function getStaticProps() {
+  const res = await fetch(`${API_URL}/products/`);
+  console.log(res);
+  const items = await res.json();
+  console.log(items);
+  return {
+    props: {
+      items,
+    },
+  };
+}
+
+//
+function products({ items }) {
+  console.log(items);
+  return (
+    <div>
+      <h3>products</h3>
+      <span>
+        {" "}
+        {items.map((i) => (
+          <div className={styles.product} key={i.id}>
+            <Link href={`/products/${i.id}`}>
+              <a>
+                <div className={styles.product__Rows}>
+                  <div className={styles.product__ColImg}>
+                    <img src={fromImageToUrl(i.img_main)} />
+                  </div>
+                  <div className={styles.product__Col}>
+                    {i.name} &euro;{twoDecimals(i.price)}
+                  </div>
+                </div>
+              </a>
+            </Link>
           </div>
-        </main>
-      </div>
-    </Layout>
+        ))}
+      </span>{" "}
+    </div>
   );
 }
+
+export default products;

@@ -1,47 +1,59 @@
+// import Head from "next/head";
 import Link from "next/link";
-import Layout from "../components/Layout";
+import { parseCookies } from "nookies";
+import { useContext } from "react";
+import Form from "./form";
+import { HeaderContext } from "../context/HeaderContext";
 import styles from "../styles/Home.module.css";
-import { useFetchUser } from "../utils/authContext";
-const { user, loading } = useFetchUser();
+import { API_URL, fromImageToUrl } from "../utils/urls";
+
 //
-
-export async function getStaticProps() {
-  const res = await fetch(`${process.env.BASE_URL}/menus`);
-  const resMenuItems = await res.json();
-  const items = resMenuItems.data;
-  return { props: { items } };
+export async function getServerSideProps(context) {
+  // console.log(context);
+  const { req } = context;
+  const res = await fetch(`${API_URL}/menus`);
+  const items = await res.json();
+  // console.log(items);
+  return {
+    props: {
+      items,
+    },
+  };
 }
+//
+function menus({ items, context }) {
+  const jwt = parseCookies(context).jwt;
+  const { user, userSet } = useContext(HeaderContext);
+  console.log("userMenus", user);
 
-const menus = ({ items }) => {
-  const { user, loading } = useFetchUser();
   return (
-    <Layout user={user}>
-      <div className={styles.container}>
-        <main className={styles.main}>
-          <p className={styles.description}>
-            Get started by editing{" "}
-            <code className={styles.code}>pages/index.js</code>
-          </p>
-
-          <div className={styles.grid}>
-            <div>
-              <span>
-                {items &&
-                  items.map((i) => (
-                    <Link href={`/menu/${i.id}`} key={i.id}>
-                      <a className={styles.card}>
-                        <h2>{i.attributes.name} &rArr;</h2>
-                        {i.attributes.description}
-                      </a>
-                    </Link>
-                  ))}
-              </span>
-            </div>
+    <div>
+      <h3>menus</h3>
+      <span>
+        {" "}
+        {items.map((i) => (
+          <div className={styles.product} key={i.id}>
+            <Link href={`/menus/${i.id}`}>
+              <a>
+                <div className={styles.product__Rows}>
+                  <div className={styles.product__ColImg}>
+                    <img src={fromImageToUrl(i.img_main)} />
+                  </div>
+                  <div className={styles.product__Col}>
+                    <p>{i.name} </p>
+                    <p>{i.description}</p>
+                    {console.log(i.icons)}
+                    {i.icons.map((ii) => ii.icon.name)}
+                  </div>
+                </div>
+              </a>
+            </Link>
           </div>
-        </main>
-      </div>
-    </Layout>
+        ))}
+      </span>{" "}
+      <Form jwt={jwt} user={user} />
+    </div>
   );
-};
+}
 
 export default menus;
