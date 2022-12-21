@@ -1,14 +1,5 @@
-## Next Magic Stripe Strapi Frontend
+### the white tree
 
-### Companion Video
-https://www.youtube.com/watch?v=385cpCpGRC0
-
-
-Sponsored by Magic https://magic.link/
-
-NextJS Frontend with Magic for Authentication, Stripe for Checkout Payment, Strapi for Product, Orders and User management
-
-Check /utils/urls for ENV Variables setup
-
-Backend at:
-https://github.com/GalloDaSballo/Next-Ecommerce-Backend
+        White Tree is a web portal (B2B) and a mobile app (B2C), aiming to
+        identify and support restaurants and catering businesses that offer
+        locally sourced, organically grown, and/or affordable menu items.
